@@ -19,10 +19,47 @@ enum Role {
   EMPLOYEE
 }
 
+enum EmploymentType {
+  FULL_TIME
+  PART_TIME
+  CASUAL
+  ZERO_HOURS
+}
+
 model User {
-  id        String   @id @default(cuid())
-  clerkId   String   @unique
-  email     String   @unique
-  role      Role     @default(EMPLOYEE)
+  id        String    @id @default(cuid())
+  clerkId   String    @unique
+  email     String    @unique
+  role      Role      @default(EMPLOYEE)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  employee  Employee?
+}
+
+model Employee {
+  id     String  @id @default(cuid())
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId String? @unique
+
+  firstName String
+  lastName  String
+  email     String
+
+  phone                 String?
+  emergencyContactName  String?
+  emergencyContactPhone String?
+
+  employmentType EmploymentType
+  department     String
+  contractHours  Decimal? @db.Decimal(5, 2)
+  payRate        Decimal? @db.Decimal(8, 2)
+
+  manager   Employee?  @relation("EmployeeManager", fields: [managerId], references: [id], onDelete: SetNull)
+  managerId String?
+  reports   Employee[] @relation("EmployeeManager")
+
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([managerId])
 }
