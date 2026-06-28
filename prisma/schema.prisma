@@ -20,10 +20,8 @@ enum Role {
 }
 
 enum EmploymentType {
-  FULL_TIME
-  PART_TIME
   CASUAL
-  ZERO_HOURS
+  CONTRACTED
 }
 
 model User {

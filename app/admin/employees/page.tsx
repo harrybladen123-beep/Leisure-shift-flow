@@ -20,7 +20,7 @@ export default async function EmployeesPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold">Employees</h1>
         <Link href="/admin/employees/new" className={buttonVariants()}>
-          Add employee
+          Add Employee
         </Link>
       </div>
       <Table>
@@ -28,8 +28,8 @@ export default async function EmployeesPage() {
           <TableRow>
             <TableHead>Name</TableHead>
             <TableHead>Email</TableHead>
-            <TableHead>Department</TableHead>
-            <TableHead>Employment type</TableHead>
+            <TableHead>Job role</TableHead>
+            <TableHead>Casual or contracted</TableHead>
             <TableHead>Contract hours</TableHead>
             <TableHead>Account</TableHead>
           </TableRow>
