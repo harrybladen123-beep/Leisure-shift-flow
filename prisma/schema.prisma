@@ -24,6 +24,27 @@ enum EmploymentType {
   CONTRACTED
 }
 
+enum ShiftStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum LeaveType {
+  ANNUAL
+  SICK
+  COMPASSIONATE
+  MATERNITY
+  TRAINING
+  UNPAID
+}
+
+enum LeaveStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
 model User {
   id        String    @id @default(cuid())
   clerkId   String    @unique
@@ -56,8 +77,63 @@ model Employee {
   managerId String?
   reports   Employee[] @relation("EmployeeManager")
 
+  archivedAt DateTime?
+
+  shifts                Shift[]
+  shiftsCreated         Shift[]        @relation("ShiftCreatedBy")
+  leaveRequests         LeaveRequest[]
+  leaveRequestsReviewed LeaveRequest[] @relation("LeaveReviewedBy")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([managerId])
+}
+
+model Shift {
+  id         String   @id @default(cuid())
+  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Restrict)
+  employeeId String
+
+  date      DateTime
+  startTime DateTime
+  endTime   DateTime
+
+  department String
+  status     ShiftStatus @default(DRAFT)
+
+  createdBy   Employee? @relation("ShiftCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  createdById String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([employeeId])
+  @@index([date])
+}
+
+model LeaveRequest {
+  id String @id @default(cuid())
+
+  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Restrict)
+  employeeId String
+
+  leaveType LeaveType
+  startDate DateTime
+  endDate   DateTime
+  reason    String?
+
+  status      LeaveStatus @default(PENDING)
+  requestedAt DateTime    @default(now())
+
+  reviewedBy   Employee? @relation("LeaveReviewedBy", fields: [reviewedById], references: [id], onDelete: SetNull)
+  reviewedById String?
+  reviewedAt   DateTime?
+  reviewNotes  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([employeeId])
+  @@index([status])
 }

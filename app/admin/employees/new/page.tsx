@@ -1,4 +1,5 @@
 import { createEmployee } from "../actions";
+import { JOB_ROLES } from "@/lib/constants";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -37,13 +38,11 @@ export default function NewEmployeePage() {
             <SelectValue placeholder="Select job role" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="Reception">Reception</SelectItem>
-            <SelectItem value="Leisure Attendants">Leisure Attendants</SelectItem>
-            <SelectItem value="Fitness Instructor">Fitness Instructor</SelectItem>
-            <SelectItem value="Swimming Teacher">Swimming Teacher</SelectItem>
-            <SelectItem value="Management Team">Management Team</SelectItem>
-            <SelectItem value="Trainer Assessor">Trainer Assessor</SelectItem>
-            <SelectItem value="Housekeeper">Housekeeper</SelectItem>
+            {JOB_ROLES.map((role) => (
+              <SelectItem key={role} value={role}>
+                {role}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>

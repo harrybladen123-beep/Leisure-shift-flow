@@ -9,13 +9,21 @@ import {
 } from "@/components/ui/card";
 
 export default async function AdminPage() {
+  const today = new Date(new Date().toDateString());
+
   const totalEmployees = await prisma.employee.count();
+  const openShifts = await prisma.shift.count({
+    where: { date: { gte: today } },
+  });
+  const pendingLeave = await prisma.leaveRequest.count({
+    where: { status: "PENDING" },
+  });
 
   const stats = [
     { label: "Total Employees", value: totalEmployees },
     { label: "Active Staff", value: "—" },
-    { label: "Open Shifts", value: "—" },
-    { label: "Leave Requests", value: "—" },
+    { label: "Open Shifts", value: openShifts },
+    { label: "Leave Requests", value: pendingLeave },
   ];
 
   return (
